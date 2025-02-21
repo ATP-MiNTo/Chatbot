@@ -1,8 +1,7 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS  # Import CORS to allow frontend access
+from flask_cors import CORS
 import sys, os, requests
 
-# Get the absolute path to the 'RAG' folder
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'RAG')))
 
 try:
@@ -12,9 +11,8 @@ except ImportError:
     generate_response = None
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for frontend communication
+CORS(app)
 
-# Unsplash API key
 UNSPLASH_API_KEY = 'P_9ov9AuFnABuXfdkTBYEQrAUtN5j7RmSU46IynLAGQ'
 UNSPLASH_URL = 'https://api.unsplash.com/photos/random'
 
@@ -24,7 +22,7 @@ def get_unsplash_image(query):
     }
     params = {
         'query': query,
-        'count': 1  # Number of images to fetch (1 for a single image)
+        'count': 1
     }
     
     response = requests.get(UNSPLASH_URL, headers=headers, params=params)
@@ -32,9 +30,8 @@ def get_unsplash_image(query):
     if response.status_code == 200:
         data = response.json()
         if data:
-            # Return the URL of the image
-            return data[0]['urls']['regular']  # You can also use 'small', 'full' depending on your needs
-    return None  # Return None if no image is found or there's an error
+            return data[0]['urls']['regular']  
+    return None  
 
 @app.route('/api/query', methods=['POST'])
 @app.route('/api/query', methods=['POST'])
@@ -47,12 +44,11 @@ def query():
 
     response = generate_response(user_query)
 
-    # Assuming the get_unsplash_image function fetches an image URL
-    image_url = get_unsplash_image(user_query)  # Modify according to your implementation
-    print("Fetched image URL:", image_url)  # Debugging line
+    image_url = get_unsplash_image(user_query)  
+    print("Fetched image URL:", image_url)  
 
     return jsonify({'response': response, 'image_url': image_url})
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0", port=5000)  # Listen on all network interfaces
+    app.run(debug=True, host="0.0.0.0", port=5000)  

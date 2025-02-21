@@ -2,17 +2,15 @@ import React, { useState } from "react";
 import './App.css';
 
 function App() {
-  const [messages, setMessages] = useState([{ text: "สวัสดี! ฉันคือ Flower Chat Bot 💬", sender: "bot" }]);
+  const [messages, setMessages] = useState([{ text: "Hi! I'm Flower Chat Bot 😁💬", sender: "bot" }]);
   const [input, setInput] = useState("");
 
   const sendMessage = async () => {
     if (input.trim() === "") return;
 
-    // Add user message
     setMessages([...messages, { text: input, sender: "user", imageUrl: null }]);
 
     try {
-      // Send user query to the Flask server
       const response = await fetch("http://127.0.0.1:5000/api/query", {
         method: "POST",
         headers: {
@@ -23,12 +21,11 @@ function App() {
 
       const data = await response.json();
 
-      console.log(data);  // Log the entire response to inspect the structure
+      console.log(data); 
 
       const botResponse = data.response;
       const botImageUrl = data.image_url;
 
-      // Add bot's response message
       setMessages((prev) => [
         ...prev,
         { text: botResponse, sender: "bot", imageUrl: botImageUrl },
@@ -51,7 +48,7 @@ function App() {
         <div className="Topic">
           <b>F🌷ower 'CHAT' Space</b>
         </div>
-        <p className="subtext">🌼 แชทบอทที่จะช่วยตอบทุกคำถามเกี่ยวกับดอกไม้ 🌼</p>
+        <p className="subtext">🌼 A chatbot that answer thing about flower 🌼</p>
       </header>
       <div className="chat-container">
         <div className="chat-box">
@@ -68,7 +65,7 @@ function App() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="พิมพ์ข้อความ..."
+            placeholder="Enter text..."
           />
           <button onClick={sendMessage}>Send</button>
         </div>
